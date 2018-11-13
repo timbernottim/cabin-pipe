@@ -194,6 +194,7 @@ csvcut -c 2 cabin_habitat_data_mda09_1987-present.csv | csvgrep -f - -c 3 cabin_
 csvcut -c 1 cabin_habitat_data_mda09_1987-present.csv | csvgrep -f - -c 1 intermediate.csv > benthic_matched_mda09_data.csv
 
 rm intermediate.csv 
+rm raw_CABIN_data
 
 #Moves matched files into their own folder, point R and WEKA to this folder
 mv clean_CABIN_data/*_matched_*  matched_CABIN_data/
