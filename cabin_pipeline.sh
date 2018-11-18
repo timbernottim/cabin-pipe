@@ -1,6 +1,9 @@
 #Installs necessary package csvkit, and its dependencies for downstream processing
 sudo apt install csvkit
 
+#Installs updates for all packages on the users machine
+sudo apt-get upgrade 
+
 #Input for user, defines where they want the files to be deposited
 echo Where would you like to download the CABIN files? Possible format, mnt/c/Users/Timber\ Gillis/Desktop/
 read var1
@@ -116,11 +119,8 @@ wget https://cabin-rcba.ec.gc.ca/Cabin/opendata/cabin_study_data_mda11_1987-pres
 #Converts files from UCS-2 encoding to UTF-8 encoding (easily loads into R and Excel)
 for filename in *.csv; do iconv -f UCS2 -t UTF-8 $filename -o $filename --verbose; done
 
-#Removes french variables and variable descriptions in the habitat files, due to the encoding, sometimes these columns mess with further pipeline commands
-for filename in cabin_habitat_*; do csvcut -C 11,12 $filename > ../clean_CABIN_data/$filename; done
-
 #Moves rest of the files into clean_CABIN_data folder 
-cp *.csv ../clean_CABIN_data
+mv *.csv ../clean_CABIN_data
 cd ../clean_CABIN_data
 
 #mda10
@@ -193,8 +193,13 @@ csvcut -c 1 cabin_benthic_data_mda09_1987-present.csv | csvgrep -f - -c 1 interm
 csvcut -c 2 cabin_habitat_data_mda09_1987-present.csv | csvgrep -f - -c 3 cabin_benthic_data_mda09_1987-present.csv > intermediate.csv
 csvcut -c 1 cabin_habitat_data_mda09_1987-present.csv | csvgrep -f - -c 1 intermediate.csv > benthic_matched_mda09_data.csv
 
+#Cleaning unnecessary files
 rm intermediate.csv
-rm raw_CABIN_data
+rmdir ../raw_CABIN_data
+
+#Removes french variables and variable descriptions in the habitat files, due to the encoding, sometimes these columns mess with further pipeline commands
+for filename in habitat_matched_*; do csvcut -C 11,12 $filename > ../matched_CABIN_data/$filename; done
 
 #Moves matched files into their own folder, point R and WEKA to this folder
-mv clean_CABIN_data/*_matched_*  matched_CABIN_data/
+rm habitat_matched_*
+mv benthic_matched_* ../matched_CABIN_data/
