@@ -1,9 +1,3 @@
-#Installs necessary package csvkit, and its dependencies for downstream processing
-sudo apt install csvkit
-
-#Installs updates for all packages on the users machine
-sudo apt-get upgrade 
-
 #Input for user, defines where they want the files to be deposited
 echo Where would you like to download the CABIN files? Possible format, mnt/c/Users/Timber\ Gillis/Desktop/
 read var1
